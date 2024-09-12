@@ -1,0 +1,131 @@
+﻿@page "/inventory"
+@using CoffeShop.Components.Data
+@using CoffeShop.Components.Models
+@using System.Data
+@inject InventoryService InventoryService
+@inject DatabaseService DatabaseService
+
+
+<h3>Inventory</h3>
+
+@if (dataTable == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (DataColumn column in dataTable.Columns)
+                {
+                    <th>@column.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow row in dataTable.Rows)
+            {
+                <tr>
+                    @foreach (var item in row.ItemArray)
+                    {
+                        <td>@item</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<br />
+<br />
+
+<button type="button" @onclick="DisplayForm2">Update Inventory Item</button>
+<button type="button" @onclick="DisplayForm1">Add Inventory Item</button>
+
+
+<br /><br />
+
+
+
+@if (isFormVisible2)
+{
+    
+    <form>
+
+        <label>Ingredient Name:</label>
+        <select @bind="selectedItem">
+            <option value="">-- Select Item --</option>
+            <option>Coffee Beans</option>
+            <option>Sugar</option>
+          
+        </select>
+        <br /><br />
+           
+        <label>Quantity: </label>
+        <input type="text" @bind="quantity" />
+        <br /><br />
+
+        <button type="button" @onclick="UpdateInventory">Submit</button>
+    </form>
+    isFormVisible = false;
+}
+
+@if (isFormVisible)
+{
+
+    <form>
+        <label>Item Name: </label>
+        <input type="text" @bind="inventory.Name" />
+        <br /><br />
+
+        <label>Quantity: </label>
+        <input type="text" @bind="inventory.Quantity" />
+        <br /><br />
+
+        <button type="button" @onclick="SubmitInventory">Submit</button>
+    </form>
+    isFormVisible2 = false;
+}
+
+
+@code {
+    private DataTable dataTable;
+    private InventoryItem inventory = new InventoryItem();
+    private bool isFormVisible = false; 
+    private bool isFormVisible2 = false;
+    private string selectedItem;          
+    private int quantity;                 
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        dataTable = await DatabaseService.GetDataAsync("SELECT * FROM InventoryItem");
+    }
+
+   
+    private void DisplayForm1()
+    {
+        isFormVisible = !isFormVisible;
+        isFormVisible2 = false;
+    }
+    private void DisplayForm2()
+    {
+        isFormVisible2 = !isFormVisible2;
+        isFormVisible = false;
+    }
+
+    private async Task SubmitInventory()
+    {
+        await InventoryService.AddIngredientAsync(inventory);
+
+        dataTable = await DatabaseService.GetDataAsync("SELECT * FROM InventoryItem");
+        inventory = new InventoryItem();
+    }
+
+    private async Task UpdateInventory()
+    {
+        await InventoryService.UpdateIngredientQuantityAsync(selectedItem, quantity);
+        dataTable = await DatabaseService.GetDataAsync("SELECT * FROM InventoryItem");
+    }
+}
+

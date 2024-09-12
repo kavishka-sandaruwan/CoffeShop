@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "Windows Machine": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": false
+    }
+  },
+  
+    "ConnectionStrings": {
+      "DefaultConnection": "Server=LAPTOP-21I8K0UF;Database=coffeeShop;User Id=kavishka;Password=12345;TrustServerCertificate=True;"
+    }
+  
+
+}

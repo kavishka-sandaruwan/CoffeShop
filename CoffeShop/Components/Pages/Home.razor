@@ -1,0 +1,52 @@
+﻿@page "/"
+@inject DatabaseService DatabaseService
+@using CoffeShop.Components.Models;
+@using CoffeShop.Components.Data;
+
+
+
+
+
+
+ @using System.Data
+
+
+<h3>Data from SQL Server</h3>
+
+@if (dataTable == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (DataColumn column in dataTable.Columns)
+                {
+                    <th>@column.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow row in dataTable.Rows)
+            {
+                <tr>
+                    @foreach (var item in row.ItemArray)
+                    {
+                        <td>@item</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private DataTable dataTable;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dataTable = await DatabaseService.GetDataAsync("SELECT * FROM MenuItem");
+    }
+}

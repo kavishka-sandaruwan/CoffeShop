@@ -1,0 +1,119 @@
+﻿@page "/order"
+@using CoffeShop.Components.Data
+@using CoffeShop.Components.Models
+@using System.Data
+@inject InventoryService InventoryService
+@inject DatabaseService DatabaseService
+@inject OrderService OrderService
+
+<h3>Give Your Order</h3>
+<br />
+<form>
+    <label>Customer Name: </label>
+    <input type="text" @bind="order.CustomerName" />
+    <br /><br />
+
+    <label>Coffee Type:</label>
+    <select @bind="order.CoffeeType">
+        <option value="">-- Select Item --</option>
+        <option>Cappuccino</option>
+        <option>Latte</option>
+        <option>Espresso</option>
+        <option>Tea</option>
+        <option>Black Coffee</option>
+    </select>
+    <br /><br />
+
+    <label>Quantity:</label>
+    <input type="number" @bind="order.Quantity" min="1" />
+    <br /><br />
+
+    <label>Size:</label>
+    <select @bind="order.Size">
+        <option value="">-- Select Size --</option> 
+        <option>Small</option>
+        <option>Medium</option>
+        <option>Large</option>
+    </select>
+    <br /><br />
+
+    <label>Extras:</label>
+    <div>
+        <input type="checkbox" @bind="order.HasExtraShot" /> Extra shot
+    </div>
+    <div>
+        <input type="checkbox" @bind="order.HasWhippedCream" /> Whipped cream
+    </div>
+    <br /><br />
+
+    <button type="button" @onclick="SubmitOrder">Submit</button>
+</form>
+<br /><br />
+<h3>Inventory</h3>
+
+@if (dataTable == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                @foreach (DataColumn column in dataTable.Columns)
+                {
+                    <th>@column.ColumnName</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (DataRow row in dataTable.Rows)
+            {
+                <tr>
+                    @foreach (var item in row.ItemArray)
+                    {
+                        <td>@item</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<style>
+    .table-bordered {
+        border: 1px solid black;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+        .table-bordered th, .table-bordered td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .table-bordered tr {
+            border: 1px solid black;
+        }
+</style>
+
+@code {
+    private DataTable dataTable;
+
+    protected override async Task OnInitializedAsync()
+    {
+        dataTable = await DatabaseService.GetDataAsync("SELECT * FROM Orders");
+    }
+
+    private CoffeeOrder order = new CoffeeOrder();
+
+    private async Task SubmitOrder()
+    {
+        await OrderService.SubmitOrderAsync(order);
+
+        dataTable = await DatabaseService.GetDataAsync("SELECT * FROM Orders");
+        order = new CoffeeOrder();
+    }
+}
+
