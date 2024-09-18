@@ -10,7 +10,6 @@ namespace CoffeShop.Components.Data
 {
     public class InventoryService
     {
-       // handling database connections.
         private readonly DatabaseService _databaseService;
 
         public InventoryService(DatabaseService databaseService)
@@ -18,7 +17,6 @@ namespace CoffeShop.Components.Data
             _databaseService = databaseService;
         }
 
-       //add a new ingredient(inventory item) to the database.
         public async Task AddIngredientAsync(InventoryItem inventory)
         {
             string query = "INSERT INTO InventoryItem (Name, Quantity) VALUES (@Name, @Quantity)";
@@ -36,7 +34,6 @@ namespace CoffeShop.Components.Data
             }
         }
 
-        //updates the quantity of an existing ingredient in the inventory Items
         public async Task UpdateIngredientQuantityAsync(string name, int quantity)
         {
             string query = "UPDATE InventoryItem SET Quantity = Quantity + @Quantity WHERE Name = @Name";
@@ -57,7 +54,7 @@ namespace CoffeShop.Components.Data
         //update inventory according to order
         public async Task UpdateInventoryAsync(string coffeeType, int quantity)
         {
-            // Determine how many coffee beans are used based on the coffee type.
+            
             int coffeeBeansUsed = coffeeType switch
             {
                 "Cappuccino" => 4,
@@ -67,7 +64,7 @@ namespace CoffeShop.Components.Data
                 "Black Coffee" => 2,
                 _ => 0
             };
-            // Determine how many sugar are used based on the coffee type.
+
             int sugarUsed = coffeeType switch
             {
                 "Cappuccino" => 5,
@@ -78,7 +75,7 @@ namespace CoffeShop.Components.Data
                 _ => 0
             };
 
-            // Calculate the total amount of coffee beans and sugar used for the given quantity.
+           
             int totalCoffeeBeansUsed = coffeeBeansUsed * quantity;
             int totalSugarUsed = sugarUsed * quantity;
 
