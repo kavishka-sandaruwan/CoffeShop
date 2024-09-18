@@ -9,47 +9,84 @@
 <h3>Give Your Order</h3>
 <br />
 <form>
-    <label>Customer Name: </label>
-    <input type="text" @bind="order.CustomerName" />
+    <table>
+    <tr>
+        <th>
+        <label>Customer Name: </label>
+        </th><th>
+        <input type="text" @bind="order.CustomerName" />
+        </th>
     <br /><br />
+    </tr>
 
-    <label>Coffee Type:</label>
-    <select @bind="order.CoffeeType">
-        <option value="">-- Select Item --</option>
-        <option>Cappuccino</option>
-        <option>Latte</option>
-        <option>Espresso</option>
-        <option>Tea</option>
-        <option>Black Coffee</option>
-    </select>
-    <br /><br />
+    <tr>
+        <th>
+        <label>Coffee Type:</label>
+         </th><th>
+        <select @bind="order.CoffeeType">
+            <option value="">-- Select Item --</option>
+            <option>Cappuccino</option>
+            <option>Latte</option>
+            <option>Espresso</option>
+            <option>Tea</option>
+            <option>Black Coffee</option>
+        </select>
+         </th>
+        <br /><br />
+     </tr>
 
-    <label>Quantity:</label>
-    <input type="number" @bind="order.Quantity" min="1" />
-    <br /><br />
 
-    <label>Size:</label>
-    <select @bind="order.Size">
-        <option value="">-- Select Size --</option> 
-        <option>Small</option>
-        <option>Medium</option>
-        <option>Large</option>
-    </select>
-    <br /><br />
+     <tr>
+         <th>
+         <label>Quantity:</label>
+         </th><th>
+         <input type="number" @bind="order.Quantity" min="1" />
+         
+         </th>
+            <br /><br />
 
-    <label>Extras:</label>
-    <div>
+     </tr>
+
+     <tr>
+         <th>
+        <label>Size:</label>
+            </th><th>
+        <select @bind="order.Size">
+            <option value="">-- Select Size --</option> 
+            <option>Small</option>
+            <option>Medium</option>
+            <option>Large</option>
+        </select>
+       
+            </th>
+            <br /> <br />
+     </tr>
+     <tr>
+         <th>
+         <label>Extras:</label>
+         </th>
+     </tr>
+    <tr>
+        <th>
         <input type="checkbox" @bind="order.HasExtraShot" /> Extra shot
-    </div>
-    <div>
+        </th><th>
+    
         <input type="checkbox" @bind="order.HasWhippedCream" /> Whipped cream
-    </div>
+        </th>
     <br /><br />
-
-    <button type="button" @onclick="SubmitOrder">Submit</button>
+     </tr>
+    </table>
+    <br />
+    <button type="button" class="submit" @onclick="SubmitOrder">Submit</button>
+    <br /><br />
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <p style="color: green;">@successMessage</p>
+    }
+    
 </form>
 <br /><br />
-<h3>Inventory</h3>
+<h3>Orders</h3>
 
 @if (dataTable == null)
 {
@@ -87,19 +124,32 @@ else
         width: 100%;
     }
 
-        .table-bordered th, .table-bordered td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
+    .table-bordered th, .table-bordered td {
+         border: 1px solid black;
+         padding: 8px;
+         text-align: left;
+    }
 
-        .table-bordered tr {
-            border: 1px solid black;
-        }
+    .table-bordered tr {
+         border: 1px solid black;
+    }
+    .submit{
+        color: rgb(6, 47, 126, 0.89);
+        border-radius:5px;
+        border-width:1px;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+      
+    }
+
+
 </style>
 
 @code {
     private DataTable dataTable;
+    private string successMessage;
 
     protected override async Task OnInitializedAsync()
     {
@@ -114,6 +164,9 @@ else
 
         dataTable = await DatabaseService.GetDataAsync("SELECT * FROM Orders");
         order = new CoffeeOrder();
+
+        // Set the success message
+        successMessage = "Order submitted successfully!";
     }
 }
 

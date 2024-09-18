@@ -53,14 +53,15 @@ namespace CoffeShop.Components.Data
         {
             decimal basePrice = order.CoffeeType switch
             {
-                "Cappuccino" => 4.00m,
-                "Latte" => 3.50m,
+                "Cappuccino" => 2.20m,
+                "Latte" => 2.30m,
                 "Espresso" => 2.50m,
-                "Tea" => 2.00m,
-                "Black Coffee" => 2.00m,
+                "Tea" => 2.40m,
+                "Black Coffee" => 3.00m,
                 _ => 0m
             };
 
+            // Determine the additional price based on the size of the coffee.
             decimal sizePrice = order.Size switch
             {
                 "Medium" => 0.50m,
@@ -68,6 +69,7 @@ namespace CoffeShop.Components.Data
                 _ => 0m
             };
 
+            // Calculate the price for any extras
             decimal extrasPrice = (order.HasExtraShot ? 0.75m : 0) + (order.HasWhippedCream ? 0.50m : 0);
 
             return (basePrice + sizePrice + extrasPrice) * order.Quantity;

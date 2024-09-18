@@ -39,8 +39,8 @@ else
 <br />
 <br />
 
-<button type="button" @onclick="DisplayForm2">Update Inventory Item</button>
-<button type="button" @onclick="DisplayForm1">Add Inventory Item</button>
+<button type="button" class="submit" @onclick="DisplayForm2">Update Inventory Item</button>
+<button type="button" class="submit" @onclick="DisplayForm1">Add Inventory Item</button>
 
 
 <br /><br />
@@ -65,7 +65,7 @@ else
         <input type="text" @bind="quantity" />
         <br /><br />
 
-        <button type="button" @onclick="UpdateInventory">Submit</button>
+        <button type="button"  @onclick="UpdateInventory">Submit</button>
     </form>
     isFormVisible = false;
 }
@@ -82,10 +82,27 @@ else
         <input type="text" @bind="inventory.Quantity" />
         <br /><br />
 
-        <button type="button" @onclick="SubmitInventory">Submit</button>
+        <button type="button"  @onclick="SubmitInventory">Submit</button>
     </form>
     isFormVisible2 = false;
 }
+<style>
+   
+    .submit{
+        color: rgb(6, 47, 126, 0.89);
+        border-radius:5px;
+        border-width:1px;
+        padding-left:20px;
+        padding-right:20px;
+        padding-top:3px;
+        padding-bottom:3px;
+        margin:10px;
+
+    }
+
+
+</style>
+
 
 
 @code {

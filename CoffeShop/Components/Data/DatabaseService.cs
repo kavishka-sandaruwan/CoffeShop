@@ -18,16 +18,19 @@ namespace CoffeShop.Components.Data
         {
             ConnectionString = connectionString;
         }
-
+        // fetch data from the database by executing a SQL query.
         public async Task<DataTable> GetDataAsync(string query)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
+                // Open the connection asynchronously.
                 await connection.OpenAsync();
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
+
                     using (SqlDataReader reader = await command.ExecuteReaderAsync())
                     {
+                        // Create a DataTable to hold the data fetched from the SQL Server.
                         DataTable dataTable = new DataTable();
                         dataTable.Load(reader);
                         return dataTable;
