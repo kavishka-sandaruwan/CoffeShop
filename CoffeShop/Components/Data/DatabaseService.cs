@@ -18,7 +18,7 @@ namespace CoffeShop.Components.Data
         {
             ConnectionString = connectionString;
         }
-
+        // Asynchronously executes the given SQL query and returns the result as a DataTable
         public async Task<DataTable> GetDataAsync(string query)
         {
             using (SqlConnection connection = new SqlConnection(ConnectionString))

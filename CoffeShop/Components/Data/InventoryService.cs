@@ -16,7 +16,7 @@ namespace CoffeShop.Components.Data
         {
             _databaseService = databaseService;
         }
-
+        // add a new inventory item 
         public async Task AddIngredientAsync(InventoryItem inventory)
         {
             string query = "INSERT INTO InventoryItem (Name, Quantity) VALUES (@Name, @Quantity)";
@@ -33,7 +33,7 @@ namespace CoffeShop.Components.Data
                 }
             }
         }
-
+        // update inventory items
         public async Task UpdateIngredientQuantityAsync(string name, int quantity)
         {
             string query = "UPDATE InventoryItem SET Quantity = Quantity + @Quantity WHERE Name = @Name";

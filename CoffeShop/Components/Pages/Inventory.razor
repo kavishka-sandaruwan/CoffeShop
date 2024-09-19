@@ -2,7 +2,9 @@
 @using CoffeShop.Components.Data
 @using CoffeShop.Components.Models
 @using System.Data
+@*  Injecting InventoryService to handle inventory operations *@
 @inject InventoryService InventoryService
+@* Injecting DatabaseService to fetch data from the database*@
 @inject DatabaseService DatabaseService
 
 
@@ -39,8 +41,8 @@ else
 <br />
 <br />
 
-<button type="button" @onclick="DisplayForm2">Update Inventory Item</button>
-<button type="button" @onclick="DisplayForm1">Add Inventory Item</button>
+<button type="button" class="submit" @onclick="DisplayForm2">Update Inventory Item</button>
+<button type="button" class="submit" @onclick="DisplayForm1">Add Inventory Item</button>
 
 
 <br /><br />
@@ -86,6 +88,20 @@ else
     </form>
     isFormVisible2 = false;
 }
+<style>
+    .submit {
+        margin-left:30px;
+        margin-right:30px;
+        margin-top:20px;
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+        border-radius: 5px;
+        border-width: 1px;
+        color: rgb(6, 47, 126, 0.89);
+    }
+</style>
 
 
 @code {

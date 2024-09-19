@@ -9,47 +9,85 @@
 <h3>Give Your Order</h3>
 <br />
 <form>
-    <label>Customer Name: </label>
-    <input type="text" @bind="order.CustomerName" />
-    <br /><br />
+    <table>
+        <tr>
+            <th>
+            <label>Customer Name: </label>
+            </th><th>
+            <input type="text" @bind="order.CustomerName" />
+           
+            </th>
+            <br />
+            <br />
+        </tr>
+        <tr>
+            <th>
+            <label>Coffee Type:</label>
+            </th><th>
+            <select @bind="order.CoffeeType">
+                <option value="">-- Select Item --</option>
+                <option>Cappuccino</option>
+                <option>Latte</option>
+                <option>Espresso</option>
+                <option>Tea</option>
+                <option>Black Coffee</option>
+            </select>
+            
+            </th>
+            <br />
+            <br />
+            
+        </tr>
+        <tr>
+            <th>
+                <label>Quantity:</label>
+            </th><th>
+                <input type="number" @bind="order.Quantity" min="1" />
+               
+            </th>
+            <br />
+            <br />
+        </tr><tr>
+            <th>
+                <label>Size:</label>
+            </th><th>
+                <select @bind="order.Size">
+                    <option value="">-- Select Size --</option> 
+                    <option>Small</option>
+                    <option>Medium</option>
+                    <option>Large</option>
+                </select>
+               
 
-    <label>Coffee Type:</label>
-    <select @bind="order.CoffeeType">
-        <option value="">-- Select Item --</option>
-        <option>Cappuccino</option>
-        <option>Latte</option>
-        <option>Espresso</option>
-        <option>Tea</option>
-        <option>Black Coffee</option>
-    </select>
-    <br /><br />
+            </th>
+            <br />
+            <br />
+        </tr>
+        <tr>
+            <th>
+                <label>Extras:</label>
+                <br /><br />
+            </th>
+         </tr><tr>
 
-    <label>Quantity:</label>
-    <input type="number" @bind="order.Quantity" min="1" />
+            <th>
+                    <input type="checkbox" @bind="order.HasExtraShot" /> Extra shot
+          </th><th>
+                    <input type="checkbox" @bind="order.HasWhippedCream" /> Whipped cream
+            </th>
+        
+        </tr>
+    </table>
     <br /><br />
-
-    <label>Size:</label>
-    <select @bind="order.Size">
-        <option value="">-- Select Size --</option> 
-        <option>Small</option>
-        <option>Medium</option>
-        <option>Large</option>
-    </select>
-    <br /><br />
-
-    <label>Extras:</label>
-    <div>
-        <input type="checkbox" @bind="order.HasExtraShot" /> Extra shot
-    </div>
-    <div>
-        <input type="checkbox" @bind="order.HasWhippedCream" /> Whipped cream
-    </div>
-    <br /><br />
-
-    <button type="button" @onclick="SubmitOrder">Submit</button>
+    <button type="button" class="submit" @onclick="SubmitOrder">Submit</button>
 </form>
+<br />
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <p style="color: green;">@successMessage</p>
+}
 <br /><br />
-<h3>Inventory</h3>
+<h3>Orders</h3>
 
 @if (dataTable == null)
 {
@@ -96,24 +134,51 @@ else
         .table-bordered tr {
             border: 1px solid black;
         }
+
+    .submit{
+        padding-left:15px;
+        padding-right:15px;
+        padding-top:3px;
+        padding-bottom:3px;
+        border-radius:5px;
+        border-width:1px;
+        color: rgb(6, 47, 126, 0.89);
+    }
 </style>
 
 @code {
     private DataTable dataTable;
+    private string successMessage;
 
     protected override async Task OnInitializedAsync()
     {
         dataTable = await DatabaseService.GetDataAsync("SELECT * FROM Orders");
+        successMessage = "";
     }
 
     private CoffeeOrder order = new CoffeeOrder();
 
+    //  Handles order submission
     private async Task SubmitOrder()
     {
+        successMessage = "";
+
         await OrderService.SubmitOrderAsync(order);
 
         dataTable = await DatabaseService.GetDataAsync("SELECT * FROM Orders");
         order = new CoffeeOrder();
+        successMessage = "Order submitted successfully!";
+        // Start the delay without blocking UI updates
+        _ = HideSuccessMessageAfterDelay();
+        
+
+    }
+
+    private async Task HideSuccessMessageAfterDelay()
+    {
+        await Task.Delay(5000); 
+        successMessage = "";
+        StateHasChanged(); 
     }
 }
 

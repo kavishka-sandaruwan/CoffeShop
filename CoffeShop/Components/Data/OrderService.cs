@@ -11,6 +11,7 @@ namespace CoffeShop.Components.Data
     public class OrderService
     {
 
+        // hold references to the DatabaseService and InventoryService
         private readonly DatabaseService _databaseService;
         private readonly InventoryService _inventoryService;
 
@@ -20,9 +21,10 @@ namespace CoffeShop.Components.Data
             _inventoryService = inventoryService;
         }
 
+        // submit a new coffee order
         public async Task SubmitOrderAsync(CoffeeOrder order)
         {
-           
+            // Calculate the total price for the order
             order.Price = CalculateOrderPrice(order);
 
             // Insert order 
@@ -45,24 +47,27 @@ namespace CoffeShop.Components.Data
                     await command.ExecuteNonQueryAsync();
                 }
             }
+            // update the inventory base on  coffee order
             await _inventoryService.UpdateInventoryAsync(order.CoffeeType, order.Quantity);
 
         }
 
+        // calculate the total price of the coffee order
         private decimal CalculateOrderPrice(CoffeeOrder order)
         {
             decimal basePrice = order.CoffeeType switch
             {
-                "Cappuccino" => 4.00m,
-                "Latte" => 3.50m,
+                "Cappuccino" => 2.20m,
+                "Latte" => 2.30m,
                 "Espresso" => 2.50m,
-                "Tea" => 2.00m,
-                "Black Coffee" => 2.00m,
+                "Tea" => 2.40m,
+                "Black Coffee" => 3.00m,
                 _ => 0m
             };
 
             decimal sizePrice = order.Size switch
             {
+                
                 "Medium" => 0.50m,
                 "Large" => 1.00m,
                 _ => 0m
